@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<header>
-			<h1>Ultra Memory-Boy Deluxe HD!</h1>
+			<h1>Ultra Memory-Boy Deluxe: HD!</h1>
 			<h2><b>Click on a tile to flip it over. Match tiles to win the game!</b></h2>
 		</header>
 		<main>
@@ -17,8 +17,28 @@
 					<ul class="tiles" id="tiles">
 					</ul>
 				</div>
-				<div class="game-info">
-					Hello world
+				<div class="game-info" id="game-info">
+					<div class="row" id="list-info">
+						<div class="col-xs-3">
+							<button type="button" id="new-game">New Game</button>
+						</div>
+						<div class="col-xs-2">
+							<p>Time:</p>
+							<p id="current-time">0</p>
+						</div>
+						<div class="col-xs-2">
+							<p>Matches:</p>
+							<p id="matches">0</p>
+						</div>
+						<div class="col-xs-2">
+							<p>Mismatches:</p>
+							<p id="mismatches">0</p>
+						</div>
+						<div class="col-xs-3">
+							<p>Pairs remaining:</p>
+							<p id="remaining">0</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</main>
