@@ -1,8 +1,10 @@
 "use strict";
 
-var selectedTile = null;
+var firstTile = null;
+var secondTile = null;
 var pics = [];
 var userCanClick = true;
+var timer = null;
 
 // Makes array of 32 possible usable pictures
 for (var i = 1; i < 33; i++) {
@@ -17,8 +19,10 @@ pics = pics.concat(pics);
 pics = _.shuffle(pics);
 
 function onReady () {
+	$("#win-message").hide();
+
 	// Files board with images
-	var ul = $(document.getElementById("tiles"));
+	var ul = $("#tiles");
 	for (var i = 0; i < 16; i++) {
 		var newLI = $(document.createElement("li"));
 		var newImg = $(document.createElement("img"));
@@ -39,7 +43,7 @@ function onReady () {
 
 	var startTime = _.now();
 
-	var timer = window.setInterval(function() {
+	timer = window.setInterval(function() {
 		$("#current-time").html(Math.floor((_.now() - startTime) / 1000));
 	}, 1000);
 }
@@ -50,16 +54,16 @@ function onTileClick() {
 		// Flips tile
 		$(this).attr("src", "img/tile" + $(this).data("number") + ".jpg");
 		$(this).data("flipped", true);
+		$(this).addClass("selected");
 
 		// No other tile currently selected
-		if (selectedTile == null) {
-			selectedTile = $(this);
-		}
-		else {
+		if (firstTile == null) {
+			firstTile = $(this);
+		} else {
 			// Not the same tile as one already selected, or any face up
 			userCanClick = false; // Two tiles selected, user cannot click
 
-			if (selectedTile.data("number") == $(this).data("number")) {
+			if (firstTile.data("number") == $(this).data("number")) {
 				// Match!
 				// Increments match counter
 				var matchElement = $("#matches");
@@ -71,27 +75,52 @@ function onTileClick() {
 				var remaining = parseInt(pairsremainingElement.html());
 				pairsremainingElement.html(remaining - 1);
 
-				selectedTile = null;
-				userCanClick = true;
-			}
-			else {
+				firstTile.removeClass("selected");
+				$(this).removeClass("selected");
+				firstTile.addClass("matched");
+				$(this).addClass("matched");
+
+				if ((remaining - 1) == 0) {
+					// User wins
+					clearInterval(timer);
+					$("#win-message").show();
+				} else {
+					// No win, doesnt flip tiles back over
+					firstTile = null;
+					userCanClick = true;
+				}
+			} else {
 				// Not a match
+				// Increments mismatch counter
 				var mismatchElement = $("#mismatches");
 				var mismatches = parseInt(mismatchElement.html());
 				mismatchElement.html(mismatches + 1);
 
-				setTimeout(function() {
-					$(this).attr("src", "img/tile-back.png");
-					$(this).data("flipped", false);
-					selectedTile.attr("src", "img/tile-back.png");
-					selectedTile.data("flipped", false);
+				secondTile = $(this);
 
-					selectedTile = null;
-					userCanClick = true;
-				}, 1000);
+				firstTile.addClass("mismatched");
+				secondTile.addClass("mismatched");
+
+				// One second after second tile click
+				setTimeout(flipCards, 1000);
 			}
 		}
 	}
+}
+
+function flipCards() {
+	firstTile.attr("src", "img/tile-back.png");
+	firstTile.data("flipped", false);
+	firstTile.removeClass("mismatched");
+	firstTile.removeClass("selected");
+	secondTile.attr("src", "img/tile-back.png");
+	secondTile.data("flipped", false);
+	secondTile.removeClass("mismatched");
+	secondTile.removeClass("selected");
+
+	firstTile = null;
+	secondTile = null;
+	userCanClick = true;
 }
 
 $(onReady);
