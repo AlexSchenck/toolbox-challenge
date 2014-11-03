@@ -1,6 +1,7 @@
 /* Main stylesheet */
 @import url(http://fonts.googleapis.com/css?family=Permanent+Marker);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@import url(http://fonts.googleapis.com/css?family=Sonsie+One);
 
 body {
 	background: #FAF9C5;
@@ -73,10 +74,11 @@ header h2 {
 }
 
 #win-message {
-	color: red;
+	color: green;
 	padding-top: 15px;
 	text-align: center;
 	font-size: 32px;
+	font-family: 'Sonsie One', cursive;
 }
 
 @media(max-width: 980px) {
